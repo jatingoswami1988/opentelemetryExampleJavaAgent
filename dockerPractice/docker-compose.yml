@@ -1,0 +1,25 @@
+services:
+  dockerpractice:
+    build: .
+    image: dockerpractice
+    container_name: dockerpractice
+    depends_on:
+      - jaeger
+    environment:
+      OTEL_SERVICE_NAME: "dockerpractice"
+      OTEL_TRACES_EXPORTER: "otlp"        # Use OTLP for gRPC
+      OTEL_LOGS_EXPORTER: "logging"
+      OTEL_METRICS_EXPORTER: "logging"       # optional
+      OTEL_EXPORTER_OTLP_ENDPOINT: "http://jaeger:4317"  # OTLP endpoint
+    ports:
+      - "8080:9898"
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    restart: always
+    ports:
+      - "16686:16686"   # Jaeger UI
+      - "4317:4317"     # OTLP gRPC
