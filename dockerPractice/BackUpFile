@@ -19,3 +19,29 @@ ENV JAVA_TOOL_OPTIONS="-javaagent:/opentelemetry-javaagent.jar \
 EXPOSE 9898
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
+
+-----
+version: "3.8"
+
+services:
+  dockerpractice:
+    build: .
+    image: dockerpractice-v2
+    container_name: dockerpractice
+    depends_on:
+      - jaeger    
+    ports:
+      - "8080:9898"
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    container_name: jaeger
+    restart: always
+    environment:
+      COLLECTOR_OTLP_ENABLED: "true"
+    ports:
+      - "16686:16686"   # Jaeger UI
+      #- "4317:4317"     # OTLP gRPC
+      - "4318:4318"     # OTLP HTTP
+
+#########################
