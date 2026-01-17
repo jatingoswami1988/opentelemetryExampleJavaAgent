@@ -3,20 +3,29 @@ version: "3.8"
 services:
   dockerpractice:
     build: .
-    image: dockerpractice-v2
+    image: dockerpractice-v3
     container_name: dockerpractice
     depends_on:
-      - jaeger    
+      - jaeger
     ports:
       - "8080:9898"
+    environment:
+      # We use the Environment Variable versions of the properties
+      - JAVA_TOOL_OPTIONS=-javaagent:/opentelemetry-javaagent.jar
+      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - OTEL_TRACES_SAMPLER=always_on
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_LOGS_EXPORTER=none
+      - OTEL_SERVICE_NAME=dockerpractice
 
   jaeger:
     image: jaegertracing/all-in-one:latest
     container_name: jaeger
     restart: always
     environment:
-      COLLECTOR_OTLP_ENABLED: "true"
+      - COLLECTOR_OTLP_ENABLED=true
     ports:
       - "16686:16686"   # Jaeger UI
-      #- "4317:4317"     # OTLP gRPC
       - "4318:4318"     # OTLP HTTP

@@ -38,7 +38,7 @@ public class DockerPracticeApplication {
 		List<User> users= service.getAllUsers();
 		User user=users.stream().filter(u->u.getId()==id).findAny().orElse(null);
 		if(user!=null){
-			logger.info("user found : {}",user);
+			logger.info("user found : {}",user.toString());
 			return user;
 		}else{
 			try {

@@ -1,5 +1,20 @@
 Jaegar Configuration :-
 
+1)java -javaagent:opentelemetry-javaagent.jar -Dotel.traces.exporter=logging -Dotel.logs.exporter=logging -Dotel.metrics.exporter=none -jar C:\practise_workspace\dockerPractice\target\dockerpractice.jar
+
+2)java [JVM OPTIONS] -jar application.jar
+
+mvn spring-boot:run
+docker build -t dockerpractice .
+docker run -p 8080:9898 dockerpractice
+docker rmi dockerpractice
+docker container ls
+docker compose down
+docker-compose up -d
+docker rmi dockerpractice jaegertracing/all-in-one
+
+URL of Jaegar - http://localhost:16686 
+
 FROM eclipse-temurin:21-jdk
 
 ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/latest/download/opentelemetry-javaagent.jar opentelemetry-javaagent.jar
