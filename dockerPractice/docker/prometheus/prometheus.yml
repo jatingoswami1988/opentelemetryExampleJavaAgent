@@ -1,0 +1,17 @@
+global:
+  scrape_interval: 15s #Prometheus collects (scrapes) metrics every 15 seconds
+  scrape_timeout: 10s  #If metrics are not received within 10 seconds, Prometheus gives up for that attempt
+  evaluation_interval: 15s #Prometheus checks alert rules every 15 seconds
+
+#This tells Prometheus WHAT applications to collect metrics from.  
+scrape_configs:
+  - job_name: otel_java_agent #Job Name
+    honor_timestamps: true  #Prometheus uses timestamps sent by the application itself.Important for accurate OpenTelemetry metrics
+    scrape_interval: 15s
+    scrape_timeout: 10s
+    metrics_path: /metrics #URL where metrics are available
+    scheme: http #Use HTTP (not HTTPS)
+    static_configs:
+      - targets:
+          - dockerpractice:9464 #So Prometheus will call this url.This tells Prometheus WHERE your app is running.Docker container name.
+		                        #Prometheus finds it via Docker network DNS.Port where OpenTelemetry Java Agent exposes metrics
